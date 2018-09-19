@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::post('signup', [
     'uses' => 'UserController@postSignUp',
@@ -25,7 +25,25 @@ Route::post('signin', [
     'as' => 'signin'
 ]);
 
+Route::post('createpost', [
+    'uses' => 'PostController@postCreatePost',
+    'as' => 'post.create',
+    'middleware' => 'auth'
+]);
+
+Route::get('deletepost/{post_id}', [
+    'uses' => 'PostController@getDeletePost',
+    'as' => 'post.delete',
+    'middleware' => 'auth'
+]);
+
+Route::get('/logout', [
+    'uses' => 'UserController@logOut',
+    'as' => 'logout'
+]);
+
 Route::get('/dashboard', [
-    'uses' => 'UserController@getDashboard',
-    'as' => 'dashboard'
+    'uses' => 'PostController@getDashboard',
+    'as' => 'dashboard',
+    'middleware' => 'auth'
 ]);

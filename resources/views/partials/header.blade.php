@@ -17,17 +17,19 @@
         </div>
 
         <div class="navbar-end">
+            @if (Auth::user())
             <div class="navbar-item">
                 <div class="field is-grouped">
                     <p class="control">
-                        <a class="button is-default">option</a>
+                    <a class="button is-default">Olá, {{ Auth::user()->name }}</a>
                     </p>
                     <p class="control">
-                        <a class="button is-primary" href="/">option</a>
+                        <a class="button is-primary" href="{{ route('logout') }}">Log out</a>
                     </p>
                 </div>
-            </div>
-            <div class="navbar-item has-dropdown is-hoverable">
+            </div>                
+            @endif
+            {{-- <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link" href="/documentation/overview/start/">
                     option
                 </a>
@@ -39,7 +41,7 @@
                         option
                     </a>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </nav>

@@ -8,13 +8,25 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
 
-    public function getDashboard()
+    /**
+     * Desloga o usuário.
+     *
+
+     * @return view
+     */
+    public function logOut()
     {
-        return view('dashboard');
+        Auth::logout();
+        return redirect()->route('home');
     }
 
     public function postSignIn(Request $request)
     {
+        $this->validate($request, [
+            'email'     => 'required',
+            'password'  => 'required'
+        ]);
+
         if(Auth::attempt(
             [
                 'email'=> $request['email'],
@@ -28,6 +40,14 @@ class UserController extends Controller
 
     public function postSignUp(Request $request)
     {
+
+        $this->validate($request, [
+            'email'     => 'required|email|unique:users',
+            'name'      => 'required',
+            'password'  => 'required|min:4'
+        ]);
+
+
         $email      = $request['email'];
         $name       = $request['name'];
         $password   = bcrypt($request['password']);
