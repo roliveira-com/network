@@ -128,7 +128,7 @@ Dashboard
                             </div>
                         </div>
 
-                        <div class="content">
+                        <div class="content" data-post-id="{{ $post->id }}">
                             <p>{{ $post->body }}</p>
                             <time datetime="2016-1-1">{{ $post->created_at }}</time>
                         </div>
@@ -167,7 +167,7 @@ Dashboard
             <button class="button" aria-label="close" data-element="modal-close" data-target="edit-modal">X</button>
         </header>
         <section class="modal-card-body">
-            <form action="{{ route('post.create') }}" method="POST">
+            <form>
                 <div class="field">
                     <p class="control">
                         <textarea id="modal-post-body" class="textarea" name="post-body" placeholder="Add a comment..."></textarea>
@@ -184,7 +184,7 @@ Dashboard
                 </div>
                 <div class="level-right">
                     <div class="level-item">
-                        <button class="button is-primary">Save changes</button>
+                        <button id="edit-post" class="button is-primary">Save changes</button>
                     </div>
                 </div>         
             </div>
@@ -193,8 +193,11 @@ Dashboard
 </div>
 
 <script>
-    var $modal = document.querySelectorAll('[data-element="modal"]')
-    var $modalClose = document.querySelectorAll('[data-element="modal-close"]')
+    var $modal = document.querySelectorAll('[data-element="modal"]');
+    var $modalClose = document.querySelectorAll('[data-element="modal-close"]');
+    var $editPostButton = document.getElementById('edit-post');
+    var $editPostValue = document.getElementById('modal-post-body');
+    var token = document.head.querySelector('meta[name="csrf-token"]')
 
     $modal.forEach(function(el){
         el.addEventListener('click',openModal)
@@ -203,6 +206,8 @@ Dashboard
     $modalClose.forEach(function(el){
         el.addEventListener('click',closeModal)
     })
+
+    $editPostButton.addEventListener('click', editPost)
 
     function openModal(evt){
         $modalTarget = document.getElementById(evt.target.getAttribute('data-target'))
@@ -235,5 +240,26 @@ Dashboard
         $modalContent = document.getElementById('modal-post-body');
         $modalContent.value = evt.target.parentNode.parentNode.parentNode.parentNode.childNodes[1].getElementsByTagName('p')[1].innerHTML;
     }
+
+    function editPost(){
+        fetch('/edit', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token.content,
+            },
+            body: JSON.stringify({
+                body: $editPostValue.value,
+                postId: "",
+            })
+        })
+        .then(resp => {
+            Modal.close();
+            console.log(JSON.parse(resp));
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
 </script>
 @endsection

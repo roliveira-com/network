@@ -47,3 +47,7 @@ Route::get('/dashboard', [
     'as' => 'dashboard',
     'middleware' => 'auth'
 ]);
+
+Route::post('/edit', function(\Illuminate\Http\Request $request){
+    return response()->json(['message' => $request['body']]);
+})->name('post.edit');
