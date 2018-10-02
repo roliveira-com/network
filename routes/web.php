@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/perfil', [
+    'uses' => 'UserController@getProfile',
+    'as' => 'profile'
+]);
+
 Route::post('signup', [
     'uses' => 'UserController@postSignUp',
     'as' => 'signup'
@@ -48,6 +53,12 @@ Route::get('/dashboard', [
     'middleware' => 'auth'
 ]);
 
-Route::post('/edit', function(\Illuminate\Http\Request $request){
-    return response()->json(['message' => $request['body']]);
-})->name('post.edit');
+Route::post('/edit', [
+    'uses' => 'PostController@postEditPost',
+    'as' => 'post.edit'
+]);
+
+Route::post('/updateprofile', [
+    'uses' => 'UserController@postSaveProfile',
+    'as' => 'profile.save'
+]);

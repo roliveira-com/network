@@ -11,7 +11,7 @@ class PostController extends Controller
     {
         $posts = Post::orderBy('created_at', 'desc')->get();
         return view('dashboard',['posts' => $posts]); 
-    }
+    }   
 
     public function postCreatePost(Request $request)
     {
@@ -38,6 +38,24 @@ class PostController extends Controller
         }
         $post->delete();
         return redirect()->route('dashboard')->with(['message' => 'Post Deletado!']);
+    }
+
+    public function postEditPost(Request $request)
+    {
+        $request->validate([
+            'postData' => 'required',
+            'postId' => 'required'
+        ]);
+        
+        $post = Post::find($request->input('postId'));
+
+        if(Auth::user() != $post->user){
+            return redirect()->route('dashboard')->with(['error' => 'Você não pode editar este post']);
+        }
+
+        $post->body = $request->input('postData');
+        $post->update();
+        return response()->json(['post'=>$post], 200);
     }
 
 }

@@ -1,6 +1,6 @@
 <nav class="navbar is-transparent">
     <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
+    <a class="navbar-item" href="{{ route('dashboard') }}">
             <img src="/image/logo/logo.png" alt="Network - A place to connect" height="28">
         </a>
         <div class="navbar-burger burger" data-target="main-nav">
@@ -21,7 +21,7 @@
             <div class="navbar-item">
                 <div class="field is-grouped">
                     <p class="control">
-                    <a class="button is-default">Olá, {{ Auth::user()->name }}</a>
+                    <a href="{{ route('profile') }}" class="button is-default">Olá, {{ Auth::user()->name }}</a>
                     </p>
                     <p class="control">
                         <a class="button is-primary" href="{{ route('logout') }}">Log out</a>

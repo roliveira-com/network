@@ -118,9 +118,15 @@ Dashboard
                     <div class="card-content">
                         <div class="media">
                             <div class="media-left">
+                                @if (Storage::disk('local')->has($post->user->name . '-' . $post->user->id . '.jpg'))
                                 <figure class="image is-24x24">
-                                    <img src="/image/logo/logo.png" alt="Placeholder image">
+                                    <img class="is-rounded" src="{{ route('profile.image', ['filename' => $post->user->name . '-' . $post->user->id . '.jpg']) }}">
                                 </figure>
+                                @else
+                                <figure class="image is-32x32">
+                                    <img width="24" class="is-rounded" src="/image/icons/profile_primary.png">
+                                </figure>
+                                @endif
                             </div>
                             <div class="media-content">
                                 <p class="title is-4">{{ $post->user->name }}</p>
@@ -137,17 +143,16 @@ Dashboard
                     <footer class="card-footer level">
                         <div class="level-left">
                             <div class="level-item">
-                                {{-- <a class="button is-info">Submit</a> --}}
+                                @if (Auth::user() == $post->user)
+                                <button data-element="modal" data-target="edit-modal" class="button is-white"><i class="icon-pencil"></i></button>
+                                <a href="{{ route('post.delete',['post_id' => $post->id]) }}" class="button is-white"><i class="icon-trash"></i></a>
+                                @endif
                             </div>
                         </div>
                         <div class="level-right">
                             <div class="level-item">
-                                <a class="button is-white">like</a>
-                                <a class="button is-white">dislike</a>
-                                @if (Auth::user() == $post->user)
-                                <a data-element="modal" data-target="edit-modal" class="button is-white">edit</a>
-                                <a href="{{ route('post.delete',['post_id' => $post->id]) }}" class="button is-white">delete</a>
-                                @endif
+                                <a class="button is-white"><i class="icon-like"></i></a>
+                                <a class="button is-white"><i class="icon-dislike"></i></a>
                             </div>
                         </div>
                     </footer>
@@ -171,6 +176,7 @@ Dashboard
                 <div class="field">
                     <p class="control">
                         <textarea id="modal-post-body" class="textarea" name="post-body" placeholder="Add a comment..."></textarea>
+                        <input type="hidden" id="modal-post-id" name="post-id"/>
                     </p>
                 </div>
             </form>
@@ -197,6 +203,8 @@ Dashboard
     var $modalClose = document.querySelectorAll('[data-element="modal-close"]');
     var $editPostButton = document.getElementById('edit-post');
     var $editPostValue = document.getElementById('modal-post-body');
+    var $editPostID = document.getElementById('modal-post-id');
+    var $editPostElement = null;
     var token = document.head.querySelector('meta[name="csrf-token"]')
 
     $modal.forEach(function(el){
@@ -210,6 +218,7 @@ Dashboard
     $editPostButton.addEventListener('click', editPost)
 
     function openModal(evt){
+        evt.preventDefault();
         $modalTarget = document.getElementById(evt.target.getAttribute('data-target'))
         $modalTarget.classList.add('is-active');
         modalContent(evt);
@@ -238,7 +247,10 @@ Dashboard
 
     function modalContent(evt){
         $modalContent = document.getElementById('modal-post-body');
-        $modalContent.value = evt.target.parentNode.parentNode.parentNode.parentNode.childNodes[1].getElementsByTagName('p')[1].innerHTML;
+        $modalID = document.getElementById('modal-post-id');
+        $modalContent.value = evt.target.parentNode.parentNode.parentNode.parentNode.childNodes[1].getElementsByTagName('p')[1].innerHTML
+        $modalID.value = evt.target.parentNode.parentNode.parentNode.parentNode.childNodes[1].getElementsByClassName('content')[0].getAttribute('data-post-id');
+        $editPostElement = evt.target.parentNode.parentNode.parentNode.parentNode.childNodes[1].getElementsByTagName('p')[1]
     }
 
     function editPost(){
@@ -246,18 +258,20 @@ Dashboard
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': token.content,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                body: $editPostValue.value,
-                postId: "",
+                postData: $editPostValue.value,
+                postId: $editPostID.value,
             })
         })
-        .then(resp => {
+        .then(resp => resp.json())
+        .then(data => { 
             Modal.close();
-            console.log(JSON.parse(resp));
+            $editPostElement.innerHTML = data.post.body
         })
         .catch(error => {
-            console.log(error);
+            console.log(error.message);
         })
     }
 
