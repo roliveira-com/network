@@ -24,10 +24,10 @@ Perfil
 <section class="section">
     <div class="container">
         <div class="columns">
-            <div class="column is-4">
-                @if (Storage::disk('local')->has($user->first_name . '-' . $user->id . '.jpg'))
+            <div class="column is-offset-2 is-2">
+                @if (Storage::disk('local')->has($user->name . '-' . $user->id . '.jpg'))
                 <figure class="image is-128x128">
-                    <img class="is-rounded" src="{{ route('profile.image', ['filename' => $user->first_name . '-' . $user->id . '.jpg']) }}">
+                    <img class="is-rounded" src="{{ route('profile.image', ['filename' => $user->name . '-' . $user->id . '.jpg']) }}">
                 </figure>
                 @else
                 <figure class="image is-128x128">
@@ -35,7 +35,7 @@ Perfil
                 </figure>
                 @endif
             </div>
-            <div class="column is-8">
+            <div class="column is-6">
                 <form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="field">

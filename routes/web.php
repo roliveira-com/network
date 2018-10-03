@@ -20,6 +20,11 @@ Route::get('/perfil', [
     'as' => 'profile'
 ]);
 
+Route::get('/avatar/{filename}',[
+    'uses' => 'UserController@getProfileImage',
+    'as' => 'profile.image'
+]);
+
 Route::post('signup', [
     'uses' => 'UserController@postSignUp',
     'as' => 'signup'

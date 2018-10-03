@@ -28,7 +28,7 @@ Dashboard
                 @include('partials.notification')
                 <article class="media">
                     <figure class="media-left">
-                        <p class="image is-64x64">
+                        <p class="image is-32x32">
                             <img src="/image/logo/logo.png">
                         </p>
                     </figure>
@@ -123,8 +123,8 @@ Dashboard
                                     <img class="is-rounded" src="{{ route('profile.image', ['filename' => $post->user->name . '-' . $post->user->id . '.jpg']) }}">
                                 </figure>
                                 @else
-                                <figure class="image is-32x32">
-                                    <img width="24" class="is-rounded" src="/image/icons/profile_primary.png">
+                                <figure class="image is-24x24">
+                                    <img class="is-rounded" src="/image/icons/profile_primary.png">
                                 </figure>
                                 @endif
                             </div>
