@@ -44,6 +44,16 @@
                                 <input class="input is-medium {{ $errors->has('password') ? 'is-danger' : '' }}" type="password" placeholder="nome" name="password" id="password" value="{{ Request::old('password') }}">
                             </div>
                         </div>
+                        <div class="field">
+                            <p class="control">
+                                <div class="custom-checkbox is-info">
+                                    <input id="checkbox" class="styled" checked type="checkbox">
+                                    <label for="checkbox">
+                                        I Agree with <a href="#">Terms and Conditions</a>
+                                    </label>
+                                </div>
+                            </p>
+                        </div>
                         <div class="field is-grouped is-grouped-right">
                             <p class="control">
                                 <button type="submit" class="button is-primary"> Sign up </button>
